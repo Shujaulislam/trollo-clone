@@ -20,6 +20,7 @@ const TaskBoardTab = () => {
   const [tasksByStatus, setTasksByStatus] = useState<{ [key: string]: Task[] }>({});
   const [statuses, setStatuses] = useState<string[]>([]);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [newStatusName, setNewStatusName] = useState('');
 
   const removeEmptyStatuses = useCallback((tasks: { [key: string]: Task[] }) => {
     return Object.keys(tasks).filter(status => tasks[status].length > 0);
@@ -73,6 +74,29 @@ const TaskBoardTab = () => {
     });
   };
 
+  const addNewTask = (status: string) => {
+    const newTask: Task = {
+      id: Date.now().toString(),
+      projectId: '', // You'll need to set this based on the current project context
+      name: '',
+      description: '',
+      status: status,
+      tags: [],
+      dueDate: '',
+      assignedUser: '',
+    };
+    setEditingTask(newTask);
+  };
+
+  const addNewStatus = () => {
+    if (newStatusName.trim()) {
+      setStatuses(prev => [...prev, newStatusName.trim()]);
+      setTasksByStatus(prev => ({ ...prev, [newStatusName.trim()]: [] }));
+      localStorage.setItem('statuses', JSON.stringify([...statuses, newStatusName.trim()]));
+      setNewStatusName('');
+    }
+  };
+
   const addOrUpdateTask = (updatedTask: Task) => {
     setTasksByStatus(prev => {
       const newTasksByStatus = { ...prev };
@@ -87,14 +111,24 @@ const TaskBoardTab = () => {
       newTasksByStatus[updatedTask.status].push(updatedTask);
 
       const storedProjects = JSON.parse(localStorage.getItem('projects') || '[]');
+      let taskAdded = false;
       storedProjects.forEach((project: any) => {
         const taskIndex = project.tasks.findIndex((task: Task) => task.id === updatedTask.id);
         if (taskIndex !== -1) {
           project.tasks[taskIndex] = updatedTask;
+          taskAdded = true;
         } else if (project.id === updatedTask.projectId) {
           project.tasks.push(updatedTask);
+          taskAdded = true;
         }
       });
+
+      // If the task wasn't added to any existing project, add it to the first project
+      // You might want to adjust this logic based on your app's requirements
+      if (!taskAdded && storedProjects.length > 0) {
+        storedProjects[0].tasks.push(updatedTask);
+      }
+
       localStorage.setItem('projects', JSON.stringify(storedProjects));
 
       const newStatuses = removeEmptyStatuses(newTasksByStatus);
@@ -206,18 +240,43 @@ const TaskBoardTab = () => {
                       </Draggable>
                     ))}
                     {provided.placeholder}
+                    <button
+                      onClick={() => addNewTask(status)}
+                      className="w-full p-2 text-left text-gray-600 hover:bg-gray-200 rounded transition-colors duration-200 flex items-center"
+                    >
+                      <Plus size={16} className="mr-2" />
+                      Add a task
+                    </button>
                   </div>
                 </div>
               )}
             </Droppable>
           ))}
+          <div className="flex-shrink-0 w-80">
+            <input
+              type="text"
+              value={newStatusName}
+              onChange={(e) => setNewStatusName(e.target.value)}
+              placeholder="Enter list title..."
+              className="w-full p-2 mb-2 border border-gray-300 rounded"
+            />
+            <button
+              onClick={addNewStatus}
+              className="w-full p-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center"
+            >
+              <Plus size={16} className="mr-2" />
+              Add another list
+            </button>
+          </div>
         </div>
       </DragDropContext>
       
       {editingTask && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">Edit Task</h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">
+              {editingTask.id ? 'Edit Task' : 'Add New Task'}
+            </h2>
             <form onSubmit={(e) => { e.preventDefault(); addOrUpdateTask(editingTask); }} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Name <span className="text-red-500">*</span></label>
@@ -324,7 +383,7 @@ const TaskBoardTab = () => {
                   type="submit"
                   className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200"
                 >
-                  Save
+                  {editingTask.id ? 'Save' : 'Add'}
                 </button>
               </div>
             </form>
