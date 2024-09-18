@@ -26,7 +26,7 @@ const ProjectsTab = () => {
   };
 
   return (
-    <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+    <div className="bg-gray-100 p-6 rounded-lg shadow-sm">
       <button
         onClick={() => setShowModal(true)}
         className="mb-6 px-4 py-2 bg-purple-500 text-white font-semibold rounded-md hover:bg-purple-800 transition duration-300 ease-in-out"
@@ -42,7 +42,7 @@ const ProjectsTab = () => {
       <div className="space-y-4">
         {projects.map((project) => (
           <Link key={project.id} href={`/projects/${project.id}`}>
-            <div className="block p-4 bg-gray-200 rounded-md hover:bg-gray-300 transition duration-300 ease-in-out">
+            <div className="block p-4 bg-white rounded-md hover:bg-gray-300 transition duration-300 ease-in-out">
               <h3 className="text-lg font-semibold text-gray-800">{project.name}</h3>
               {project.description && (
                 <p className="text-sm text-gray-600 mt-1">{project.description}</p>
