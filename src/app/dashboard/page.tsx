@@ -6,7 +6,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import ProjectsTab from '@/components/ProjectsTab';
 import TaskBoardTab from '@/components/TaskBoardTab';
 import { useAuth } from '@/context/AuthContext';
-import { LogOut, User, Briefcase, ClipboardList } from 'lucide-react';
+import { LogOut, Briefcase, ClipboardList } from 'lucide-react';
 
 const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState<'projects' | 'taskboard'>('projects');

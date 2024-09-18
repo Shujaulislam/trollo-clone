@@ -6,11 +6,12 @@ import { useParams } from 'next/navigation';
 import NewTaskModal from '@/components/NewTaskModal';
 import { Edit2, Trash2, Plus, Calendar, User, Tag } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { LogOut, Briefcase, ClipboardList } from 'lucide-react';
+import { LogOut, } from 'lucide-react';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
 interface Task {
   id: string;
+  projectId: string;
   name: string;
   description?: string;
   status: string;
