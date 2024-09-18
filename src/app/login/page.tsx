@@ -1,4 +1,3 @@
-// src/app/login/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -21,7 +20,7 @@ const LoginPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simple form validation
+    //  Form validation
     if (!form.email || !form.password) {
       setErrors('Email and password are required.');
       return;

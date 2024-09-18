@@ -1,4 +1,3 @@
-// src/app/register/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -43,10 +42,8 @@ const RegisterPage = () => {
     users.push(form);
     localStorage.setItem('users', JSON.stringify(users));
 
-   // Display success message
    setSuccessMessage('Registration successful! Redirecting to login page...');
 
-   // Redirect to login after a short delay
    setTimeout(() => {
      router.push('/login');
    }, 2000);
@@ -101,8 +98,8 @@ const RegisterPage = () => {
           Register
         </button>
         <p className="mt-4 text-center">
-+         Already have an account?{' '}
-+         <button
+         Already have an account?{' '}
+         <button
           type="button"
           onClick={() => router.push('/login')}
            className="font-bold text-blue-500 hover:underline"

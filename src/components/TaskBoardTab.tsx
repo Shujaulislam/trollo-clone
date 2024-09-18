@@ -1,4 +1,3 @@
-// src/components/TaskBoardTab.tsx
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -77,7 +76,7 @@ const TaskBoardTab = () => {
   const addNewTask = (status: string) => {
     const newTask: Task = {
       id: Date.now().toString(),
-      projectId: '', // You'll need to set this based on the current project context
+      projectId: '', 
       name: '',
       description: '',
       status: status,
@@ -124,7 +123,7 @@ const TaskBoardTab = () => {
       });
 
       // If the task wasn't added to any existing project, add it to the first project
-      // You might want to adjust this logic based on your app's requirements
+      
       if (!taskAdded && storedProjects.length > 0) {
         storedProjects[0].tasks.push(updatedTask);
       }

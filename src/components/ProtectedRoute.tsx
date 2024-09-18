@@ -1,4 +1,3 @@
-// src/components/ProtectedRoute.tsx
 'use client';
 
 import { useRouter } from 'next/navigation';

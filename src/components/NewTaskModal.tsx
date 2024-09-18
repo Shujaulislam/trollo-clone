@@ -1,4 +1,3 @@
-// src/components/NewTaskModal.tsx
 'use client';
 
 import { useState, useEffect, KeyboardEvent } from 'react';
@@ -20,7 +19,7 @@ interface NewTaskModalProps {
   projectId: string;
   onClose: () => void;
   onSave: (task: any) => void;
-  taskToEdit?: Task; // Add this line
+  taskToEdit?: Task; 
 }
 
 const NewTaskModal = ({ projectId, onClose, onSave, taskToEdit }: NewTaskModalProps) => {
