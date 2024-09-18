@@ -27,10 +27,8 @@ const RegisterPage = () => {
       return;
     }
 
-    // Get existing users from local storage
     const users = JSON.parse(localStorage.getItem('users') || '[]');
 
-    // Check if email already exists
     const emailExists = users.some((user: any) => user.email === form.email);
     if (emailExists) {
       setErrors('Email is already registered.');
