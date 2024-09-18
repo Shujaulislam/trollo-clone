@@ -1,7 +1,7 @@
 // src/components/NewTaskModal.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, KeyboardEvent } from 'react';
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from '@/context/AuthContext';
 
@@ -30,10 +30,11 @@ const NewTaskModal = ({ projectId, onClose, onSave, taskToEdit }: NewTaskModalPr
     name: taskToEdit?.name || '',
     description: taskToEdit?.description || '',
     status: taskToEdit?.status || '',
-    tags: taskToEdit?.tags.join(', ') || '',
+    tags: taskToEdit?.tags || [],
     dueDate: taskToEdit?.dueDate || '',
     assignedUser: taskToEdit?.assignedUser || user?.name || '',
   });
+  const [tagInput, setTagInput] = useState('');
   const [errors, setErrors] = useState<string>('');
 
   useEffect(() => {
@@ -45,6 +46,35 @@ const NewTaskModal = ({ projectId, onClose, onSave, taskToEdit }: NewTaskModalPr
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTagInput(e.target.value);
+  };
+
+  const handleTagKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      addTag();
+    }
+  };
+
+  const addTag = () => {
+    const trimmedTag = tagInput.trim();
+    if (trimmedTag && !form.tags.includes(trimmedTag)) {
+      setForm(prevForm => ({
+        ...prevForm,
+        tags: [...prevForm.tags, trimmedTag],
+      }));
+      setTagInput('');
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    setForm(prevForm => ({
+      ...prevForm,
+      tags: prevForm.tags.filter(tag => tag !== tagToRemove),
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -65,7 +95,7 @@ const NewTaskModal = ({ projectId, onClose, onSave, taskToEdit }: NewTaskModalPr
       name: form.name,
       description: form.description,
       status: form.status,
-      tags: form.tags.split(',').map((tag) => tag.trim()),
+      tags: form.tags,
       dueDate: form.dueDate,
       assignedUser: form.assignedUser,
     };
@@ -127,15 +157,30 @@ const NewTaskModal = ({ projectId, onClose, onSave, taskToEdit }: NewTaskModalPr
           </div>
         </div>
         <div className="mb-4">
-          <label className="block mb-1">Tags (comma-separated) *</label>
-          <input
-            type="text"
-            name="tags"
-            value={form.tags}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
-            required
-          />
+          <label className="block mb-1">Tags *</label>
+          <div className="flex flex-wrap items-center p-2 border rounded">
+            {form.tags.map(tag => (
+              <span key={tag} className="px-2 py-1 m-1 text-sm bg-blue-100 rounded">
+                {tag}
+                <button
+                  type="button"
+                  onClick={() => removeTag(tag)}
+                  className="ml-1 text-xs text-gray-500 hover:text-gray-700"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+            <input
+              type="text"
+              value={tagInput}
+              onChange={handleTagInputChange}
+              onKeyDown={handleTagKeyDown}
+              onBlur={addTag}
+              className="flex-grow px-2 py-1 outline-none"
+              placeholder="Enter tags..."
+            />
+          </div>
         </div>
         <div className="mb-4">
           <label className="block mb-1">Due Date *</label>
