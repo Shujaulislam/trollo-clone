@@ -27,26 +27,26 @@ const RegisterPage = () => {
       return;
     }
 
-    // Save user to local storage
+    // Get existing users from local storage
     const users = JSON.parse(localStorage.getItem('users') || '[]');
-    users.push(form);
-    localStorage.setItem('users', JSON.stringify(users));
 
-      // Check if email already exists
+    // Check if email already exists
     const emailExists = users.some((user: any) => user.email === form.email);
     if (emailExists) {
       setErrors('Email is already registered.');
       return;
     }
 
+    // Save user to local storage
     users.push(form);
     localStorage.setItem('users', JSON.stringify(users));
 
-   setSuccessMessage('Registration successful! Redirecting to login page...');
+    setSuccessMessage('Registration successful! Redirecting to login page...');
+ 
+    setTimeout(() => {
+      router.push('/login');
+    }, 2000);
 
-   setTimeout(() => {
-     router.push('/login');
-   }, 2000);
   };
 
 
