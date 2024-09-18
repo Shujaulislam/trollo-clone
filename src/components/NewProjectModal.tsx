@@ -12,7 +12,7 @@ interface NewProjectModalProps {
 }
 
 const projectSchema = z.object({
-  name: z.string().nonempty('Project name is required.'),
+  name: z.string().min(1,'Project name is required.'),
   description: z.string().optional(),
 });
 
@@ -46,21 +46,23 @@ const NewProjectModal = ({ onClose, onSave }: NewProjectModalProps) => {
       >
         <h2 className="mb-6 text-2xl font-bold text-center">New Project</h2>
         <div className="mb-4">
-          <label className="block mb-1">Project Name</label>
+          <label className="block mb-1">Project Name<span className="text-red-500">*</span></label>
           <input
             type="text"
             {...register('name')}
             className="w-full px-3 py-2 border rounded"
+            required
           />
           {errors.name && (
             <p className="mt-1 text-red-500">{errors.name.message}</p>
           )}
         </div>
         <div className="mb-6">
-          <label className="block mb-1">Description</label>
+          <label className="block mb-1">Description<span className="text-red-500">*</span></label>
           <textarea
             {...register('description')}
             className="w-full px-3 py-2 border rounded"
+            required
           ></textarea>
         </div>
         <div className="flex justify-end">

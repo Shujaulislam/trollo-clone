@@ -191,6 +191,7 @@ const TaskBoardTab = () => {
                             </div>
                           </div>
                           <p>{task.description}</p>
+                          <p>{task.tags}</p>
                           <p>{task.dueDate}</p>
                           <p>{task.assignedUser}</p>
                         </div>
@@ -246,6 +247,7 @@ const TaskBoardTab = () => {
                   ))}
                 </select>
               </div>
+              
               <div className="mb-4">
                 <label className="block mb-1">Due Date <span className="text-red-500">*</span></label>
                 <input
