@@ -191,7 +191,13 @@ const TaskBoardTab = () => {
                             </div>
                           </div>
                           <p>{task.description}</p>
-                          <p>{task.tags}</p>
+                          <div className="flex flex-wrap mt-2">
+                            {task.tags.map((tag, index) => (
+                              <span key={index} className="px-2 py-1 m-1 text-sm bg-blue-100 rounded">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
                           <p>{task.dueDate}</p>
                           <p>{task.assignedUser}</p>
                         </div>
@@ -247,7 +253,41 @@ const TaskBoardTab = () => {
                   ))}
                 </select>
               </div>
-              
+              <div className="mb-4">
+                <label className="block mb-1">Tags <span className="text-red-500">*</span></label>
+                <div className="flex flex-wrap items-center p-2 border rounded">
+                  {editingTask.tags.map((tag, index) => (
+                    <span key={index} className="px-2 py-1 m-1 text-sm bg-blue-100 rounded">
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newTags = editingTask.tags.filter((_, i) => i !== index);
+                          setEditingTask({...editingTask, tags: newTags});
+                        }}
+                        className="ml-1 text-xs text-gray-500 hover:text-gray-700"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  <input
+                    type="text"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ',') {
+                        e.preventDefault();
+                        const newTag = e.currentTarget.value.trim();
+                        if (newTag && !editingTask.tags.includes(newTag)) {
+                          setEditingTask({...editingTask, tags: [...editingTask.tags, newTag]});
+                          e.currentTarget.value = '';
+                        }
+                      }
+                    }}
+                    className="flex-grow px-2 py-1 outline-none"
+                    placeholder="Enter tags..."
+                  />
+                </div>
+              </div>
               <div className="mb-4">
                 <label className="block mb-1">Due Date <span className="text-red-500">*</span></label>
                 <input
