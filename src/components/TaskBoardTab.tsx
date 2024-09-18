@@ -34,7 +34,7 @@ const TaskBoardTab = () => {
       allTasks = allTasks.concat(project.tasks || []);
     });
 
-    const groupedTasks = storedStatuses.reduce((acc, status) => {
+    const groupedTasks = storedStatuses.reduce((acc: { [key: string]: Task[] }, status: string) => {
       acc[status] = allTasks.filter((task) => task.status === status);
       return acc;
     }, {} as { [key: string]: Task[] });
